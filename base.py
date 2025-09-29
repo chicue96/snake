@@ -76,15 +76,14 @@ class SnakeGame(arcade.Window):
             self.snake.pop()  # quitar cola
 
     def on_draw(self):
-        arcade.start_render()
+        self.clear() # limpia el frame con el color de fondo
         # Dibujar serpiente
         for i, (x, y) in enumerate(self.snake):
             px, py = x * TILE, y * TILE
             size = TILE - 2
-            arcade.draw_rectangle_filled(
-                px + TILE / 2, py + TILE / 2, size, size,
-                arcade.color.ELECTRIC_LIME if i == 0 else arcade.color.APPLE_GREEN
-            )
+            color = arcade.color.ELECTRIC_LIME if i == 0 else arcade.color.APPLE_GREEN
+            offset = (TILE - size) / 2  # centra el cuadrado dentro de la celda
+            arcade.draw_lbwh_rectangle_filled(px + offset, py + offset, size, size, color)
         # Comida
         fx, fy = self.food
         arcade.draw_circle_filled(fx * TILE + TILE / 2, fy * TILE + TILE / 2, TILE / 3, arcade.color.RED_ORANGE)
