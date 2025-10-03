@@ -35,8 +35,14 @@ DIRS = {
 # comportamiento implementando esos métodos. Luego, al instanciar SnakeGame() y
 # llamar arcade.run(), Arcade ejecuta el bucle de eventos y va llamando on_update y
 # on_draw por ti.
-
 class SnakeGame(arcade.Window):
+    def __init__(self):
+        # Constructor de tu clase ventana/juego. Se ejecuta al crear SnakeGame().
+        super().__init__(WIDTH, HEIGHT, "Snake - Arcade")  # Llama al __init__ de arcade.Window: crea la ventana con tamaño y título.
+        arcade.set_background_color(BG)                    # Fija el color de fondo que usará clear() en cada frame.
+        self.reset()                                       # Resetea/Inicializa el estado del juego (serpiente, dirección, comida, puntaje).
+
+
     print("Inicia el juego")
 
 if __name__ == "__main__":

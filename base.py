@@ -18,7 +18,7 @@ DIRS = {
 
 class SnakeGame(arcade.Window):
     def __init__(self):
-        super().__init__(WIDTH, HEIGHT, "Snake - Arcade")
+        super().__init__(WIDTH, HEIGHT, "Come Cocos - Arcade")
         arcade.set_background_color(BG)
         self.reset()
 
