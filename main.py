@@ -19,7 +19,6 @@ DIRS = {
     arcade.key.LEFT:  (-1, 0),
     arcade.key.RIGHT: (1, 0),
 }
-
 # definir la clase del juego, que hereda de arcade.Window
 # * arcade.Window es a clase de Arcade que representa una ventana del juego
 #   (maneja el bucle principal, eventos del teclado, redibujado, etc.).
@@ -42,8 +41,35 @@ class SnakeGame(arcade.Window):
         arcade.set_background_color(BG)                    # Fija el color de fondo que usará clear() en cada frame.
         self.reset()                                       # Resetea/Inicializa el estado del juego (serpiente, dirección, comida, puntaje).
 
+    def reset(self):
+        # self es la referencia a la instancia actual sobre la que se está ejecutando un método.
+        """Reinicia el estado del juego (serpiente, dirección, puntaje, temporizador y comida)."""
+        # Serpiente: lista de celdas (x, y) en el grid. Empieza en el centro del tablero.
+        # COLS // 2 y ROWS // 2 son divisiones enteras para obtener la celda central.
+        self.snake = [(COLS // 2, ROWS // 2)]
+        # Dirección inicial (dx, dy). (1, 0) = hacia la derecha.
+        self.dir = (1, 0)
+        # Segmentos pendientes por crecer después de comer. Cada “tick” consume 1 hasta volver a 0.
+        self.to_grow = 0
+        # Puntaje inicial.
+        self.score = 0
+        # Acumulador de tiempo para mover por “ticks” fijos (independiente del FPS).
+        self.timer = 0.0
+        # Genera una posición de comida aleatoria que no choque con el cuerpo de la serpiente.
+        self.food = self._spawn_food()
 
-    print("Inicia el juego")
+    def _spawn_food(self):
+        """Elige y devuelve una celda libre del tablero para colocar la comida."""
+        while True:
+            # Genera una posición aleatoria dentro de los límites del grid.
+            # random.randrange(N) produce un entero en el rango [0, N)
+            p = (random.randrange(COLS), random.randrange(ROWS))
+            # Asegura que la comida no aparezca sobre el cuerpo de la serpiente
+            if p not in self.snake:
+                return p  # Devuelve la tupla (x, y) y termina la función
+    
+    
+
 
 if __name__ == "__main__":
     print("Inicia el juego")
