@@ -68,8 +68,19 @@ class SnakeGame(arcade.Window):
             if p not in self.snake:
                 return p  # Devuelve la tupla (x, y) y termina la función
     
-    
-
+    def on_key_press(self, key, modifiers):
+        # Callback de Arcade: se llama cuando el usuario PRESIONA una tecla.
+        # 'key' es el código de la tecla; 'modifiers' indica si había Shift/Ctrl/Alt (no lo usamos aquí).
+        if key in DIRS:
+            # Si la tecla es una direccional válida (arriba/abajo/izquierda/derecha) registrada en DIRS...
+            nx, ny = DIRS[key]  # Obtenemos el vector de movimiento deseado para esa tecla.
+            # Evitar reversa instantánea: no permitir girar 180° sobre sí mismo (p. ej., de derecha a izquierda).
+            if (nx, ny) != (-self.dir[0], -self.dir[1]):
+                self.dir = (nx, ny)  # Actualizamos la dirección actual de la serpiente.
+        elif key == arcade.key.R:
+            self.reset()  # 'R' reinicia el juego (estado inicial: serpiente, puntaje, comida, etc.).
+        elif key == arcade.key.ESCAPE:
+            arcade.close_window()  # 'Esc' cierra la ventana y finaliza la aplicación.
 
 if __name__ == "__main__":
     print("Inicia el juego")
