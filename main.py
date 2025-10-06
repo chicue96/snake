@@ -82,5 +82,31 @@ class SnakeGame(arcade.Window):
         elif key == arcade.key.ESCAPE:
             arcade.close_window()  # 'Esc' cierra la ventana y finaliza la aplicación.
 
+    def on_update(self, delta_time: float):   # Callback que Arcade llama cada frame; delta_time = segundos desde el frame anterior
+        self.timer += delta_time              # Acumula el tiempo transcurrido para llevar control de “ticks” lógicos fijos
+        while self.timer >= MOVE_EVERY:       # Si ya pasó al menos un intervalo de movimiento (tick)...
+            self.timer -= MOVE_EVERY          # Consume un intervalo y conserva el “exceso” para mantener ritmo estable
+            self._step()                      # Avanza un paso de lógica del juego (mover, comer, colisiones, etc.)
+
+    def _step(self):                               # Avanza un “tick” de la lógica del juego.
+        hx, hy = self.snake[0]                     # Posición (x, y) de la cabeza actual.
+        dx, dy = self.dir                          # Vector de dirección actual (delta x, delta y).
+        nx, ny = (hx + dx) % COLS, (hy + dy) % ROWS  # Nueva cabeza con “wrap”: módulo para salir por un borde y entrar por el opuesto.
+        # Colisión con el cuerpo (si la nueva cabeza caería sobre alguna parte actual de la serpiente)
+        if (nx, ny) in self.snake:
+            self.reset()                           # Reinicia el juego si hay choque.
+            return                                  # Termina este tick.
+        self.snake.insert(0, (nx, ny))             # Mueve la cabeza: inserta la nueva posición al inicio de la lista.
+        if (nx, ny) == self.food:                  # Si la cabeza cayó en la comida...
+            self.score += 1                        # Suma al puntaje.
+            self.to_grow += 1                      # Marca que debe crecer (no quitar cola este tick).
+            self.food = self._spawn_food()         # Genera una nueva comida en una celda libre.
+        if self.to_grow > 0:                       # Si hay crecimiento pendiente...
+            self.to_grow -= 1                      # Consume una unidad de crecimiento (mantiene la longitud).
+        else:
+            self.snake.pop()                       # Si no debe crecer, elimina el último segmento (mueve la cola).
+
+    
+
 if __name__ == "__main__":
     print("Inicia el juego")
